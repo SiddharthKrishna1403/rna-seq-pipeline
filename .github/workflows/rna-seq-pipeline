@@ -1,0 +1,27 @@
+name: RNA-Seq Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run-rna-seq-pipeline:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Run RNA-Seq Pipeline
+      run: |
+        docker-compose -f docker-compose.rna-seq.yml up --build
+        docker-compose -f docker-compose.rna-seq.yml down
+
+    - name: Upload Results
+      uses: actions/upload-artifact@v2
+      with:
+        name: rna-seq-results
+        path: data/
