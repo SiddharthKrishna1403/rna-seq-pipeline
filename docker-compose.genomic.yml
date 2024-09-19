@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  bwa:
+    image: biocontainers/bwa:v0.7.17_cv1
+    volumes:
+      - ./data:/data
+    command: bwa mem /data/reference.fa /data/reads_1.fq /data/reads_2.fq > /data/aligned.sam
+
+  gatk:
+    image: broadinstitute/gatk:4.2.6.1
+    volumes:
+      - ./data:/data
+    command: gatk HaplotypeCaller -R /data/reference.fa -I /data/aligned.bam -O /data/output.vcf
+
+  snpeff:
+    image: quay.io/biocontainers/snpeff:5.1d--hdfd78af_0
+    volumes:
+      - ./data:/data
+    command: snpEff ann -v GRCh38.86 /data/output.vcf > /data/annotated.vcf
