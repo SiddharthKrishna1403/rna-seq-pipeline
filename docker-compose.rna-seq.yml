@@ -1,0 +1,35 @@
+version: '3'
+services:
+  sra-tools:
+    image: ncbi/sra-tools
+    volumes:
+      - ./data:/data
+
+  fastqc:
+    image: biocontainers/fastqc
+    volumes:
+      - ./data:/data
+
+  trimmomatic:
+    image: staphb/trimmomatic
+    volumes:
+      - ./data:/data
+
+  star:
+    image: quay.io/biocontainers/star:2.7.10a--h9ee0642_0
+    volumes:
+      - ./data:/data
+
+  htseq:
+    image: quay.io/biocontainers/htseq:2.0.2--py310h1425a21_0
+    volumes:
+      - ./data:/data
+
+  deseq2:
+    image: bioconductor/bioconductor_docker:RELEASE_3_15
+    volumes:
+      - ./data:/data
+      - ./scripts:/scripts
+
+volumes:
+  data:
