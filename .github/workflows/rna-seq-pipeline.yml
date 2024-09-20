@@ -1,0 +1,31 @@
+name: RNA-seq Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  run_pipeline:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Set up Docker Compose
+      run: |
+        sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        sudo chmod +x /usr/local/bin/docker-compose
+    
+    - name: Run RNA-seq pipeline
+      run: |
+        chmod +x scripts/run_rna_seq_pipeline.sh
+        ./scripts/run_rna_seq_pipeline.sh
+      env:
+        SRA_ACCESSION: SRRXXXXXXX
+
+    - name: Upload results
+      uses: actions/upload-artifact@v2
+      with:
+        name: rna-seq-results
+        path: data/
